@@ -13,19 +13,19 @@ pygame.display.set_caption("Aircraft Bullet Dodge")
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
 
 # Game settings
-PLAYER_SIZE = 50
-BULLET_SIZE = 10
-BULLET_SPEED = 7
 PLAYER_SPEED = 5
+BULLET_SPEED = 7
 
-# Player setup
-player = pygame.Rect(WIDTH // 2, HEIGHT - PLAYER_SIZE * 2, PLAYER_SIZE, PLAYER_SIZE)
+# Load player (airplane) image
+airplane_img = pygame.image.load("airplane.png")
+airplane_img = pygame.transform.scale(airplane_img, (50, 50))  # Resize as needed
+player = airplane_img.get_rect(center=(WIDTH // 2, HEIGHT - 100))
 
-# Bullet setup
+# Load bullet image
+bullet_img = pygame.image.load("bullet.png")
+bullet_img = pygame.transform.scale(bullet_img, (10, 20))  # Resize as needed
 bullets = []
 
 # Timer
@@ -59,8 +59,9 @@ while running:
 
     # Bullet generation
     if random.randint(1, 30) == 1:
-        bullet_x = random.randint(0, WIDTH - BULLET_SIZE)
-        bullets.append(pygame.Rect(bullet_x, 0, BULLET_SIZE, BULLET_SIZE))
+        bullet_x = random.randint(0, WIDTH - bullet_img.get_width())
+        bullet_rect = bullet_img.get_rect(topleft=(bullet_x, 0))
+        bullets.append(bullet_rect)
 
     # Move bullets
     for bullet in bullets[:]:
@@ -72,10 +73,10 @@ while running:
             bullets.remove(bullet)
             score += 1
 
-    # Draw player and bullets
-    pygame.draw.rect(screen, BLUE, player)
+    # Draw player (airplane) and bullets
+    screen.blit(airplane_img, player)  # Draw the airplane image
     for bullet in bullets:
-        pygame.draw.rect(screen, RED, bullet)
+        screen.blit(bullet_img, bullet)  # Draw each bullet image
 
     # Display score
     score_text = font.render(f"Score: {score}", True, WHITE)
